@@ -1,59 +1,4 @@
-﻿function ImageRenderExtension(viewer, options) {
-    Autodesk.Viewing.Extension.call(this, viewer, options);
-}
-
-ImageRenderExtension.prototype = Object.create(Autodesk.Viewing.Extension.prototype);
-ImageRenderExtension.prototype.constructor = ImageRenderExtension;
-
-ImageRenderExtension.prototype.load = function () {
-    // Set background environment to "Infinity Pool"
-    // and make sure the environment background texture is visible
-    this.viewer.setLightPreset(6);
-    this.viewer.setEnvMapBackground(true);
-
-    // Ensure the model is centered
-    this.viewer.fitToView();
-
-    return true;
-};
-
-ImageRenderExtension.prototype.unload = function () {
-    // nothing yet
-};
-
-ImageRenderExtension.prototype.onToolbarCreated = function (toolbar) {
-    // alert('TODO: customize Viewer toolbar');
-
-    var viewer = this.viewer;
-
-    // Button 1
-    var button1 = createToolbarButton('snapshot-button', 'https://img.icons8.com/ios/30/camera--v3.png','Tomar Captura');
-    button1.onClick = function (e) {
-        readDepthAndNormalMaps(viewer);
-    }
-    // SubToolbar
-    this.subToolbar = new Autodesk.Viewing.UI.ControlGroup('my-custom-toolbar');
-    this.subToolbar.addControl(button1);
-
-    toolbar.addControl(this.subToolbar);
-    }
-
-
-// funcion para crear boton de snapshots
-function createToolbarButton(buttonId, buttonIconUrl, buttonTooltip) {
-    const button = new Autodesk.Viewing.UI.Button(buttonId);
-    button.setToolTip(buttonTooltip);
-    const icon = button.container.querySelector('.adsk-button-icon');
-    if (icon) {
-        icon.style.backgroundImage = `url(${buttonIconUrl})`;
-        icon.style.backgroundSize = `24px`;
-        icon.style.backgroundRepeat = `no-repeat`;
-        icon.style.backgroundPosition = `center`;
-    }
-    return button;
-}
-
-// ------------------------------------------------------------------------------- mapa de profundidad y normales
+﻿// ------------------------------------------------------------------------------- mapa de profundidad y normales
 function readDepthAndNormalMaps(viewer) {
     const depthTarget = viewer.impl.renderer().getDepthTarget();
     const gl = viewer.impl.glrenderer().context;
@@ -150,7 +95,3 @@ function createDownloadLink(pngUrl, fileName, linkText) {
     document.body.appendChild(downloadLink);
     downloadLink.click();
 }
-
-
-
-Autodesk.Viewing.theExtensionManager.registerExtension('ImageRenderExtension', ImageRenderExtension);
