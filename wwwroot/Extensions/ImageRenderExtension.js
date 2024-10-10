@@ -28,7 +28,8 @@ class ImageRenderExtension extends Autodesk.Viewing.Extension {
         // Button 1
         var button1 = createToolbarButton('snapshot-button', 'https://img.icons8.com/ios/30/camera--v3.png', 'Tomar Captura');
         button1.onClick = function (e) {
-            readDepthAndNormalMaps(viewer);
+            //readDepthAndNormalMaps(viewer);
+            sacaCaptura(viewer);
         }
         // SubToolbar
         this.subToolbar = new Autodesk.Viewing.UI.ControlGroup('my-custom-toolbar');
