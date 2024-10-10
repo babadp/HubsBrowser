@@ -106,16 +106,16 @@ function sacaCaptura(viewer) {
                 const formData = new FormData();
                 formData.append('image', blob, 'capture.png');
 
-                fetch('http://127.0.0.1:8188/upload/image', {
+                await fetch('http://localhost:8080/api/image/upload', {
                     method: 'POST',
                     mode: 'no-cors',
                     body: formData
                 })
-                    /*.then(response => response.json())
+                    .then(response => response.json())
                     .then(data => {
                         // Aquí puedes manejar la respuesta
                         console.log('Imagen fotorrealista generada:', data);
-                    })*/
+                    })
                     .catch(error => console.error('Error:', error));
             });
     });
