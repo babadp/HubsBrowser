@@ -30,6 +30,7 @@ class ImageRenderExtension extends Autodesk.Viewing.Extension {
         button1.onClick = function (e) {
             //readDepthAndNormalMaps(viewer);
             sacaCaptura(viewer);
+
         }
         // SubToolbar
         this.subToolbar = new Autodesk.Viewing.UI.ControlGroup('my-custom-toolbar');
