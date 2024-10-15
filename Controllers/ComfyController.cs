@@ -19,30 +19,31 @@ public class ComfyController : ControllerBase
     }
 
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadImage([FromBody] byte[] imageBlob)
-    {
+    public async Task<IActionResult> UploadImage(/*[FromBody] byte[] imageBlob*/)
+    {/*
         if (imageBlob == null || imageBlob.Length == 0)
         {
             return BadRequest("No image data provided.");
-        }
+        }*/
 
         // Crear el contenido del formulario para enviar a ComfyUI
         var formData = new MultipartFormDataContent();
 
+        /*
         // Añade imagen
         var imageContent = new ByteArrayContent(imageBlob);
         imageContent.Headers.ContentType = new MediaTypeHeaderValue("image/png"); // Asegúrate de que el tipo MIME coincide
         formData.Add(imageContent, "image", "image.png");
-
-      /*
+        */
+      
         // Añade workflow
         var workflowContent = new StringContent(ProcesaPrompt());
         workflowContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
         formData.Add(workflowContent, "workflow");
-        */
+        
 
         // Hacer la petición POST a la API de ComfyUI
-        var response = await _httpClient.PostAsync("http://127.0.0.1:8188/upload/image", formData);
+        var response = await _httpClient.PostAsync("http://127.0.0.1:8188/prompt", formData);
 
         if (response.IsSuccessStatusCode)
         {
@@ -56,7 +57,6 @@ public class ComfyController : ControllerBase
         }
     }
 
-    /*
     private string ProcesaPrompt()
     {
         string promptText = @"
@@ -169,7 +169,7 @@ public class ComfyController : ControllerBase
             },
             ""19"": {
                 ""inputs"": {
-                    ""image"": ""normal-image.png"",
+                    ""image"": ""capture.png"",
                     ""upload"": ""image""
                 },
                 ""class_type"": ""LoadImage"",
@@ -236,13 +236,11 @@ public class ComfyController : ControllerBase
                 ""_meta"": {
                     ""title"": ""Canny""
                 }
-            },
-            ""files"":{
-              ""/input/capture.png""
             }
         }
         ";
 
+        /*
         // Deserialize the JSON into a dictionary
         var prompt = JsonConvert.DeserializeObject<Dictionary<string, object>>(promptText);
 
@@ -253,10 +251,9 @@ public class ComfyController : ControllerBase
         // Set the seed for our KSampler node
         var node3 = (Dictionary<string, object>)((Dictionary<string, object>)prompt["3"])["inputs"];
         node3["seed"] = 5;
-
+        */
         // Serialize the updated object back to JSON
-        return JsonConvert.SerializeObject(prompt, Formatting.Indented);
+        return JsonConvert.SerializeObject(promptText, Formatting.Indented);
     }
-  */
 }
 
