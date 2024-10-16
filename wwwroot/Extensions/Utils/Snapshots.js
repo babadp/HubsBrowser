@@ -1,4 +1,4 @@
-﻿// ------------------------------------------------------------------------------- mapa de profundidad y normales
+﻿// ------------------------------------------------------------------------------- lee mapa de profundidad y normales, y los envia a Comfy
 function readDepthAndNormalMaps(viewer) {
     const depthTarget = viewer.impl.renderer().getDepthTarget();
     const gl = viewer.impl.glrenderer().context;
@@ -62,9 +62,31 @@ function readDepthAndNormalMaps(viewer) {
     const depthPngUrl = depthCanvas.toDataURL('image/png');
     const normalPngUrl = normalCanvas.toDataURL('image/png');
 
+    // Convert PNG URL to blob
+    const depthPngBlob = dataURLToBlob(depthPngUrl);
+    const normalPngBlob = dataURLToBlob(normalPngUrl);
+
+    /*
     // Create download links for the PNGs
     createDownloadLink(depthPngUrl, 'depth-image.png', 'Download Depth Image');
     createDownloadLink(normalPngUrl, 'normal-image.png', 'Download Normal Image');
+    */
+
+    const formData = new FormData();
+    formData.append('image', depthPngBlob, 'depth-img.png');
+    fetch('http://127.0.0.1:8188/upload/image', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+    })
+
+    const formData2 = new FormData();
+    formData2.append('image', normalPngBlob, 'normal-img.png');
+    fetch('http://127.0.0.1:8188/upload/image', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData2
+    })
 }
 
 function unpackDepth(alpha, beta) {
@@ -96,7 +118,22 @@ function createDownloadLink(pngUrl, fileName, linkText) {
     downloadLink.click();
 }
 
-// ----------------------------------------------------------
+
+// Funcion para pasar las URL de los canvas a blob para hacer fetch a comfy
+function dataURLToBlob(dataURL) {
+    const byteString = atob(dataURL.split(',')[1]);
+    const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+        uint8Array[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([arrayBuffer], { type: mimeString });
+}
+
+// ---------------------------------------------------------------------------
 
 function sacaCaptura(viewer) {
     viewer.getScreenShot(1920, 1080, function (blobURL) {

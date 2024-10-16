@@ -18,6 +18,15 @@ body, html {
     align-items: center;
 }
 
+/*
+#positiveprompt {
+    display: inline;
+    margin: 1em;
+    height: 2em;
+    width: 50%;
+    text-align: center;
+}*/
+
 #sidebar {
     width: 25%;
     left: 0;
