@@ -26,11 +26,15 @@
         let button1 = createToolbarButton('snapshot-button', 'https://img.icons8.com/ios/30/camera--v3.png', 'Tomar Captura');
         button1.onClick = async function (e) {
             try {
-                await readDepthAndNormalMaps(viewer);
-                await sacaCaptura(viewer);
+                // Este es el id que utilizarán imagenes y prompt en comfy.
+                let seed = Math.floor(Date.now() + (Math.random() * (1 - 100000000000)));
+                console.log(seed);
+                await readDepthAndNormalMaps(viewer,seed);
+                await sacaCaptura(viewer,seed);
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 // Iniciar el workflow después de la espera
-                iniciaWorkflow(document.getElementById('positiveprompt').value);
+                iniciaWorkflow(document.getElementById('positiveprompt').value, seed);
+                muestraWorkflow();
             } catch (error) {
                 console.error('Error en el proceso:', error);
             }
@@ -41,7 +45,6 @@
 
         toolbar.addControl(this.subToolbar);
     }
-
 }
 
 // funcion para crear boton de snapshots

@@ -1,4 +1,4 @@
-﻿function iniciaWorkflow(promptText) {
+﻿function iniciaWorkflow(promptText,seed) {
     let workflow =
     {
         3: {
@@ -131,10 +131,17 @@
         }
     };
 
-
     // Establecer la semilla (seed) en el nodo '3'
+    const node3 = workflow["3"]["inputs"];
+    node3["seed"] = seed;
+
+    // Establece el prompt positivo del usuario en el nodo '6'
     const node6 = workflow["6"]["inputs"];
     node6["text"] = promptText;
+
+    // Establece el nombvre de la imagen el nodo '19'
+    const node19 = workflow["19"]["inputs"];
+    node19["image"] = "capture" + seed + ".png";
 
     // Cambio de nombre a prompt porque Comfy lo detecta con esta palabra
     const prompt = workflow;
@@ -143,7 +150,7 @@
     const updatedWorkflow = JSON.stringify({ prompt });
     console.log(updatedWorkflow);
 
-    fetch('http://127.0.0.1:8188/prompt', {
+    fetch('http://172.24.65.252:8188/prompt', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -151,4 +158,20 @@
         },
         body: updatedWorkflow
     });
+}
+
+function muestraWorkflow() {
+    fetch('http://172.24.65.252:8188/prompt', {
+        method: 'GET',
+    })
+        .then(respuesta => {
+            console.log(respuesta);
+            // Wait for 3 seconds before making the next request
+            setTimeout(muestraWorkflow, 3000);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            // Retry after 3 seconds if there's an error
+            setTimeout(muestraWorkflow, 3000);
+        });
 }

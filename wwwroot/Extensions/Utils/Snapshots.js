@@ -1,5 +1,5 @@
 ﻿// ------------------------------------------------------------------------------- lee mapa de profundidad y normales, y los envia a Comfy
-function readDepthAndNormalMaps(viewer) {
+function readDepthAndNormalMaps(viewer,seed) {
     const depthTarget = viewer.impl.renderer().getDepthTarget();
     const gl = viewer.impl.glrenderer().context;
     const w = depthTarget.width;
@@ -73,16 +73,16 @@ function readDepthAndNormalMaps(viewer) {
     */
 
     const formData = new FormData();
-    formData.append('image', depthPngBlob, 'depth-img.png');
-    fetch('http://127.0.0.1:8188/upload/image', {
+    formData.append('image', depthPngBlob, "depth-img" + seed + ".png");
+    fetch('http://172.24.65.252:8188/upload/image', {
         method: 'POST',
         mode: 'no-cors',
         body: formData
     })
 
     const formData2 = new FormData();
-    formData2.append('image', normalPngBlob, 'normal-img.png');
-    fetch('http://127.0.0.1:8188/upload/image', {
+    formData2.append('image', normalPngBlob, "normal-img" + seed + ".png");
+    fetch('http://172.24.65.252:8188/upload/image', {
         method: 'POST',
         mode: 'no-cors',
         body: formData2
@@ -135,15 +135,15 @@ function dataURLToBlob(dataURL) {
 
 // ---------------------------------------------------------------------------
 
-function sacaCaptura(viewer) {
+function sacaCaptura(viewer,seed) {
     viewer.getScreenShot(1920, 1080, function (blobURL) {
         fetch(blobURL)
             .then(res => res.blob())
             .then(blob => {
                 const formData = new FormData();
-                formData.append('image', blob, 'capture.png');
+                formData.append('image', blob, "capture" + seed + ".png");
 
-                fetch('http://127.0.0.1:8188/upload/image', {
+                fetch('http://172.24.65.252:8188/upload/image', {
                     method: 'POST',
                     mode: 'no-cors',
                     body: formData
